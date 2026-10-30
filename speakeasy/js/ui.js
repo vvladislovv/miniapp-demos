@@ -43,12 +43,12 @@
     return res === 'ok';
   }
 
-  function confetti() {
+  function confetti(small) {
     if (reduced()) return;
     const fx = $('#fx');
-    const colors = ['#ff3d9a', '#ffb347', '#6ef0e0', '#ffd9a3', '#c77dff'];
+    const colors = ['#FF5A3C', '#FFD23F', '#B79CFF', '#5BE0B3', '#FF8FC7'];
     const frag = document.createDocumentFragment();
-    for (let i = 0; i < 46; i++) {
+    for (let i = 0; i < (small ? 22 : 46); i++) {
       const s = document.createElement('i');
       s.style.cssText = '--x:' + (Math.random() * 100) + 'vw;--dx:' + (Math.random() * 160 - 80) + 'px;--r:' + (Math.random() * 720 - 360) + 'deg;--d:' + (1.6 + Math.random() * 1.4) + 's;--w:' + (6 + Math.random() * 7) + 'px;background:' + colors[i % colors.length] + ';animation-delay:' + (Math.random() * 0.3) + 's';
       frag.appendChild(s);
@@ -57,6 +57,7 @@
     setTimeout(() => { fx.textContent = ''; }, 3600);
   }
 
+  SPK.views = SPK.views || {};
   SPK.ui = { esc, $, $$, reduced, shuffle, plural, fmt, toast, dialog, confirm, confetti };
   SPK.go = (path) => { location.hash = '#/' + path; };
   SPK.replace = (path) => { history.replaceState(null, '', '#/' + path); window.dispatchEvent(new HashChangeEvent('hashchange')); };

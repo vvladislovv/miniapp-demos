@@ -1,23 +1,26 @@
 /* Искры: баланс, ежедневный бонус, пакеты (демо-покупка), история. */
 (function () {
-  const { esc, $, $$, fmt, confirm, toast, confetti } = SPK.ui;
-  const { icon } = SPK.art;
+  const { esc, fmt, confirm, toast, confetti } = SPK.ui;
+  const { icon, sparkFill, mascot } = SPK.art;
   const store = SPK.store;
 
   const when = (t) => new Date(t).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const PACK_TONE = ['mint', 'lilac', 'pink'];
 
   SPK.views.sparks = function (root, arg) {
     if (arg) return SPK.replace('sparks');
     const s = store.get();
     const claimed = s.bonusDay === store.todayKey();
-    root.innerHTML = '<section class="page"><header class="ph-head"><p class="eyebrow">Раздел 03</p><h1 class="page-h" tabindex="-1">Искры</h1>'
-      + '<p class="lead">Искры открывают платные свидания и дают подсказки в диалогах.</p></header>'
-      + '<div class="balance"><div><span class="bl">Ваш баланс</span><div class="bn">' + icon('spark') + '<b>' + fmt(s.sparks) + '</b></div></div>'
-      + '<button class="btn ' + (claimed ? 'ghost' : 'pri') + '" data-act="bonus"' + (claimed ? ' disabled' : '') + '>' + icon('gift') + (claimed ? 'Бонус получен, приходите завтра' : 'Ежедневный бонус +' + SPK.DAILY_BONUS + ' ✦') + '</button></div>'
-      + '<h2 class="sec-h">Пополнить</h2><div class="packs">' + SPK.PACKS.map((p) => '<button class="pack" data-id="' + p.id + '">' + (p.tag ? '<span class="tag">' + esc(p.tag) + '</span>' : '')
-        + '<span class="pk-n">' + esc(p.name) + '</span><span class="pk-s">' + icon('spark') + fmt(p.sparks) + '</span><span class="pk-p">' + p.price + ' ₽</span></button>').join('') + '</div>'
+    root.innerHTML = '<section class="page"><div class="card balance"><div class="bal-t"><p class="eyebrow">Искры</p><h1 class="h1" tabindex="-1">Ваш баланс</h1>'
+      + '<div class="bn">' + sparkFill() + '<b>' + fmt(s.sparks) + '</b></div>'
+      + '<p class="lead">Искры открывают платные свидания и дают подсказки в диалогах.</p>'
+      + '<button class="btn ' + (claimed ? 'ghost' : 'pri') + ' big" data-act="bonus"' + (claimed ? ' disabled' : '') + '>' + icon('gift') + (claimed ? 'Бонус получен, приходи завтра' : 'Ежедневный бонус +' + SPK.DAILY_BONUS + ' ✦') + '</button></div>'
+      + mascot(claimed ? 'happy' : 'wink', 120) + '</div>'
+      + '<h2 class="h2 sec-h">Пополнить</h2><div class="packs">' + SPK.PACKS.map((p, i) => '<button class="pack tone-' + PACK_TONE[i % 3] + '" data-id="' + p.id + '">' + (p.tag ? '<span class="tag">' + esc(p.tag) + '</span>' : '')
+        + '<span class="pk-n">' + esc(p.name) + '</span><span class="pk-s">' + sparkFill() + fmt(p.sparks) + '</span><span class="pk-p">' + p.price + ' ₽</span></button>').join('') + '</div>'
       + '<p class="note-int"><span>Подключение</span> оплата (эквайринг). В демо искры начисляются сразу, деньги не списываются.</p>'
-      + '<h2 class="sec-h">История</h2>' + (s.log.length ? '<ul class="log">' + s.log.map((e) => '<li><span class="lg-d">' + esc(e.d) + '<small>' + when(e.t) + '</small></span><b class="' + (e.n > 0 ? 'pl' : 'mi') + '">' + (e.n > 0 ? '+' : '−') + fmt(Math.abs(e.n)) + ' ✦</b></li>').join('') + '</ul>' : '<p class="empty">Операций пока нет. Откройте сценарий или заберите бонус.</p>') + '</section>';
+      + '<h2 class="h2 sec-h">История</h2>' + (s.log.length ? '<ul class="card log">' + s.log.map((e) => '<li><span class="lg-d">' + esc(e.d) + '<small>' + when(e.t) + '</small></span><b class="' + (e.n > 0 ? 'pl' : 'mi') + '">' + (e.n > 0 ? '+' : '−') + fmt(Math.abs(e.n)) + ' ✦</b></li>').join('') + '</ul>'
+        : '<div class="card empty">' + mascot('sad', 80) + '<p>Операций пока нет. Откройте сценарий или заберите бонус.</p></div>') + '</section>';
 
     root.onclick = async (e) => {
       const b = e.target.closest('[data-act], .pack');

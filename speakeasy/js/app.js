@@ -7,13 +7,11 @@
   let cleanup = null, first = true;
 
   const link = (n) => '<a class="nl" href="#/' + n[0] + '" data-r="' + n[0] + '">' + icon(n[2]) + '<span>' + n[1] + '</span></a>';
-  const brand = '<a class="brand" href="#/home" aria-label="Speakeasy, на главную"><span class="logo">' + icon('spark') + '</span><span class="bn-t">Speakeasy</span></a>';
 
   function buildChrome() {
-    $('#rail').innerHTML = brand + '<div class="rail-links">' + NAV.map(link).join('') + '</div>'
-      + '<div class="rail-foot"><span class="rf-k">Автор курса</span><b>' + SPK.AUTHOR + '</b><span class="rf-s">Английский для свиданий и общения</span></div>';
+    $('#brand').innerHTML = '<a class="brand" href="#/home" aria-label="Speakeasy, на главную">' + SPK.art.mascot('happy', 40) + '<span class="bn-t">Speakeasy</span></a>';
+    $('#menu').innerHTML = NAV.map(link).join('');
     $('#bnav').innerHTML = NAV.map(link).join('');
-    $('#topbar').innerHTML = brand + '<span id="pillbox"></span>';
   }
 
   function refresh() {

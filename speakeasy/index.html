@@ -3,33 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0c0610">
+<meta name="theme-color" content="#FFF6E9">
 <title>Speakeasy — английский для свиданий</title>
 <meta name="description" content="Speakeasy: репетируй живые диалоги для свиданий и учи слова из мемов. Автор курса Mia Lane.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230c0610'/%3E%3Cpath d='M16 5l2.6 8.4L27 16l-8.4 2.6L16 27l-2.6-8.4L5 16l8.4-2.6z' fill='%23ff3d9a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23FFD23F'/%3E%3Cpath d='M16 5l2.6 8.4L27 16l-8.4 2.6L16 27l-2.6-8.4L5 16l8.4-2.6z' fill='%23FF5A3C' stroke='%231B1530' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,500;1,9..144,700;1,9..144,900&family=Onest:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/shell.css">
 <link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/path.css">
 <link rel="stylesheet" href="css/chat.css">
-<link rel="stylesheet" href="css/cards.css">
+<link rel="stylesheet" href="css/memes.css">
+<link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
 <a class="skip" href="#main">К содержимому</a>
 <div class="app" id="app">
-  <nav class="rail" id="rail" aria-label="Основная навигация"></nav>
-  <main id="main" class="main" tabindex="-1">
-    <header class="topbar" id="topbar"></header>
-    <div id="view"></div>
-  </main>
-  <aside class="aside" id="aside" aria-label="Статистика"></aside>
+  <header class="top" id="topbar">
+    <div class="top-in"><div id="brand"></div><nav class="menu" id="menu" aria-label="Основная навигация"></nav><span id="pillbox"></span></div>
+  </header>
+  <div class="wrap">
+    <main id="main" class="main" tabindex="-1"><div id="view"></div></main>
+    <aside class="aside" id="aside" aria-label="Статистика"></aside>
+  </div>
   <nav class="bnav" id="bnav" aria-label="Нижняя навигация"></nav>
 </div>
 <dialog id="dlg" aria-modal="true"></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div id="fx" aria-hidden="true"></div>
-<noscript><p style="padding:24px;color:#fff">Для работы Speakeasy нужен JavaScript.</p></noscript>
+<noscript><p style="padding:24px">Для работы Speakeasy нужен JavaScript.</p></noscript>
 <script src="js/data.js"></script>
 <script src="js/memes-data.js"></script>
 <script src="js/art.js"></script>

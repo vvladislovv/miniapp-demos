@@ -1,9 +1,10 @@
 /* Чат-диалог: мессенджер с «печатает…», крупными вариантами, подсказкой, переводом и разбором ошибок. */
 (function () {
-  const { esc, $, $$, shuffle, toast, confetti, reduced, plural } = SPK.ui;
-  const { icon, avatar } = SPK.art;
+  const { esc, $, $$, shuffle, toast, confetti, reduced } = SPK.ui;
+  const { icon, avatar, mascot, star } = SPK.art;
   const store = SPK.store;
   const LETTERS = ['A', 'B', 'C'];
+  const OK_MOOD = ['happy', 'wink'];
 
   SPK.views.chat = function (root, id) {
     const sc = SPK.SCENARIOS.find((x) => x.id === id);
@@ -19,9 +20,9 @@
 
     root.innerHTML = '<section class="chat" aria-label="Диалог: ' + esc(sc.title) + '">'
       + '<header class="chat-h"><button class="ib" data-act="back" aria-label="Назад к сценариям">' + icon('back') + '</button>'
-      + '<div class="who">' + avatar(sc.who, sc.hue, 40) + '<div><h1 class="who-n" tabindex="-1">' + esc(sc.who) + '</h1><small>' + esc(sc.title) + ' · ' + sc.lvl + '</small></div></div>'
-      + '<div class="chat-tools"><button class="chip-b" data-act="tr" aria-pressed="false" title="Показать перевод на русский">RU</button>'
-      + '<button class="chip-b" data-act="hint">' + icon('bulb') + '<span>Подсказка · ' + SPK.HINT_COST + ' ✦</span></button></div></header>'
+      + '<div class="who">' + avatar(sc.who, sc.hue, 44, SPK.EMO_WHO[sc.id]) + '<div><h1 class="who-n" tabindex="-1">' + esc(sc.who) + '</h1><small>' + esc(sc.title) + ' · ' + sc.lvl + '</small></div></div>'
+      + '<div class="chat-tools"><button class="chip-b" data-act="tr" aria-pressed="false" title="Показать перевод на русский">' + icon('translate') + '<span>RU</span></button>'
+      + '<button class="chip-b" data-act="hint" aria-label="Подсказка за ' + SPK.HINT_COST + ' искр">' + icon('bulb') + '<span><span class="hl">Подсказка · </span>' + SPK.HINT_COST + ' ✦</span></button></div></header>'
       + '<div class="steps" id="steps" role="progressbar" aria-label="Прогресс диалога" aria-valuemin="0" aria-valuemax="' + sc.steps.length + '" aria-valuenow="0">' + sc.steps.map(() => '<i></i>').join('') + '</div>'
       + '<div class="feed" id="feed" role="log" aria-live="polite"></div><div class="opts" id="opts"></div></section>';
 
@@ -40,13 +41,13 @@
       scroll();
       return el;
     }
-    const himHtml = (st) => avatar(sc.who, sc.hue, 32) + '<div class="bub"><p class="en">' + esc(st.him) + '</p><p class="ru' + (showRu ? ' on' : '') + '">' + esc(st.ru) + '</p>'
+    const himHtml = (st) => avatar(sc.who, sc.hue, 34, SPK.EMO_WHO[sc.id]) + '<div class="bub"><p class="en">' + esc(st.him) + '</p><p class="ru' + (showRu ? ' on' : '') + '">' + esc(st.ru) + '</p>'
       + '<button class="tr-b" data-act="trone" aria-label="Показать перевод реплики">перевод</button></div>';
 
     function say() {
       busy = true; opts.innerHTML = ''; setSteps();
       const st = sc.steps[step];
-      const typing = addMsg('him', avatar(sc.who, sc.hue, 32) + '<div class="bub typing" aria-label="' + esc(sc.who) + ' печатает"><i></i><i></i><i></i></div>');
+      const typing = addMsg('him', avatar(sc.who, sc.hue, 34, SPK.EMO_WHO[sc.id]) + '<div class="bub typing" aria-label="' + esc(sc.who) + ' печатает"><i></i><i></i><i></i></div>');
       later(() => { typing.remove(); addMsg('him', himHtml(st)); showOpts(); }, 900);
     }
 
@@ -67,13 +68,16 @@
       addMsg('me', '<div class="bub"><p class="en">' + esc(st.opts[k][0]) + '</p></div>', ok ? 'ok' : 'bad');
       if (ok) {
         correct++;
-        addMsg('note', '<div class="note ok">' + icon('check') + '<span>' + esc(st.opts[0][1]) + '</span></div>');
+        addMsg('note', '<div class="note ok">' + mascot(OK_MOOD[step % 2], 64) + '<span><b>' + ['Верно!', 'Отлично!', 'Супер!', 'В точку!'][step % 4] + '</b> ' + esc(st.opts[0][1]) + '</span></div>');
+        confetti(true);
+        later(scroll, 60);
         later(next, 1500);
       } else {
         mistakes.push({ him: st.him, mine: st.opts[k][0], right: st.opts[0][0], why: st.opts[k][1], tip: st.opts[0][1] });
-        addMsg('note', '<div class="note bad">' + icon('x') + '<span><b>Лучше сказать:</b> ' + esc(st.opts[0][0]) + '<br>' + esc(st.opts[k][1]) + '</span></div>');
-        opts.innerHTML = '<button class="btn pri big" data-act="next" autofocus>Дальше' + icon('next') + '</button>';
-        $('[data-act=next]', opts).focus();
+        addMsg('note', '<div class="note bad">' + mascot('sad', 64) + '<span><b>Лучше сказать:</b> <span class="mk">' + esc(st.opts[0][0]) + '</span><br>' + esc(st.opts[k][1]) + '</span></div>');
+        opts.insertAdjacentHTML('beforeend', '<button class="btn pri big next-b" data-act="next">Дальше' + icon('next') + '</button>');
+        $('[data-act=next]', opts).focus({ preventScroll: true });
+        later(scroll, 60);
       }
       refreshHint();
     }
@@ -117,9 +121,9 @@
       });
       if (flawless) confetti();
       const rev = mistakes.length ? '<h3 class="rev-h">Разбор ошибок</h3><ul class="rev">' + mistakes.map((m) =>
-        '<li><p class="rv-q">' + esc(m.him) + '</p><p class="rv-bad">' + icon('x') + esc(m.mine) + '</p><p class="rv-ok">' + icon('check') + esc(m.right) + '</p><p class="rv-w">' + esc(m.why) + '</p></li>').join('') + '</ul>'
+        '<li><p class="rv-q">' + esc(m.him) + '</p><p class="rv-bad">' + icon('x') + esc(m.mine) + '</p><p class="rv-ok">' + icon('check') + '<span class="mk">' + esc(m.right) + '</span></p><p class="rv-w">' + esc(m.why) + '</p></li>').join('') + '</ul>'
         : '<p class="rev-none">Ни одной ошибки. Так держать!</p>';
-      const card = addMsg('note', '<section class="finish" aria-label="Итоги"><div class="fin-stars" aria-label="Звёзд: ' + stars + ' из 3">' + [1, 2, 3].map((i) => '<span class="' + (i <= stars ? 'on' : '') + '">' + icon('star') + '</span>').join('') + '</div>'
+      const card = addMsg('note', '<section class="finish" aria-label="Итоги">' + mascot(flawless ? 'party' : correct >= total / 2 ? 'happy' : 'sad', 128, 'fin-m') + '<div class="fin-stars" aria-label="Звёзд: ' + stars + ' из 3">' + [1, 2, 3].map((i) => star(i <= stars)).join('') + '</div>'
         + '<h2 class="fin-h">' + (flawless ? 'Идеальное свидание' : 'Свидание завершено') + '</h2>'
         + '<p class="fin-p">Верных ответов: <b>' + correct + ' из ' + total + '</b></p>'
         + '<div class="fin-r"><span>+' + gainXp + ' XP</span><span>' + (gainSp ? '+' + gainSp + ' ✦' : 'искры только за первый проход') + '</span></div>'
@@ -142,7 +146,8 @@
     function onKey(e) {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (/INPUT|TEXTAREA|SELECT/.test((e.target.tagName || ''))) return;
-      if (['1', '2', '3'].includes(e.key) && !busy) { const b = $$('.opt', opts)[Number(e.key) - 1]; if (b) b.click(); }
+      const idx = ['1', '2', '3'].indexOf(e.key);
+      if (idx >= 0 && !busy) { const b = $$('.opt', opts)[idx]; if (b) b.click(); }
       else if (e.key === 'Escape' && !document.querySelector('dialog[open]')) SPK.go('dates');
     }
     root.addEventListener('click', onClick);
