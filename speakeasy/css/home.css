@@ -1,0 +1,48 @@
+/* Главная: герой, неоновая трубка, билеты */
+.hero { position: relative; border-radius: 28px; overflow: hidden; margin-top: 8px; border: 1px solid var(--line); box-shadow: 0 0 60px rgba(255, 61, 154, .18); isolation: isolate; animation: rise .6s var(--spring) both; }
+.hero-art { position: absolute; inset: 0 0 auto 0; width: 100%; height: 360px; z-index: -1; -webkit-mask-image: linear-gradient(#000 62%, transparent); mask-image: linear-gradient(#000 62%, transparent); }
+.hero-in { padding: 250px 22px 24px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.hero-h { font: italic 900 clamp(32px, 8.2vw, 68px)/1.02 var(--serif); letter-spacing: -.02em; text-shadow: 0 2px 30px rgba(12, 6, 16, .9); }
+.hero-h em { color: var(--amb); text-shadow: 0 0 30px rgba(255, 179, 71, .7); }
+.hero-p { color: #e6d6ec; max-width: 48ch; text-shadow: 0 1px 12px #0c0610; }
+.hero-goal { width: min(420px, 100%); }
+.sign { animation: flick 5s infinite; }
+.sign.s2 { animation-duration: 7s; animation-delay: 1s; }
+.sign.s3 { animation-duration: 4s; animation-delay: 2s; }
+@keyframes flick { 0%, 92%, 96%, 100% { opacity: 1; } 94% { opacity: .55; } 98% { opacity: .75; } }
+
+/* неоновая трубка */
+.tube-wrap { width: 100%; }
+.tube { height: 18px; border-radius: 999px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .18); padding: 3px; box-shadow: inset 0 0 10px rgba(0, 0, 0, .6); }
+.tube i { display: block; height: 100%; width: max(var(--p), 8px); border-radius: 999px; background: linear-gradient(90deg, #ff3d9a, #ffb347); box-shadow: 0 0 10px #ff3d9a, 0 0 26px rgba(255, 61, 154, .85), 0 0 46px rgba(255, 179, 71, .5); transition: width .9s var(--spring); animation: tubein 1s var(--spring) both; }
+@keyframes tubein { from { width: 8px; } }
+.tube-t { margin-top: 8px; font-size: 14px; color: var(--mut); }
+.tube-t b { color: var(--amb); font-size: 16px; }
+
+/* билеты */
+.tickets { display: grid; gap: 16px; margin-top: 20px; }
+.ticket { display: grid; grid-template-columns: 1fr 132px; min-height: 190px; position: relative; color: #1a0612; transition: transform .35s var(--spring), filter .3s; animation: rise .6s var(--spring) both;
+  -webkit-mask: radial-gradient(circle 15px at 100% 50%, #0000 96%, #000) right / 51% 100% no-repeat, radial-gradient(circle 15px at 0 50%, #0000 96%, #000) left / 51% 100% no-repeat;
+  mask: radial-gradient(circle 15px at 100% 50%, #0000 96%, #000) right / 51% 100% no-repeat, radial-gradient(circle 15px at 0 50%, #0000 96%, #000) left / 51% 100% no-repeat; }
+.ticket:nth-child(2) { animation-delay: .1s; }
+.ticket:hover { transform: translateY(-4px) rotate(-.6deg); filter: drop-shadow(0 12px 30px rgba(255, 61, 154, .4)); }
+.ticket:active { transform: scale(.98); }
+.t-dates { background: linear-gradient(120deg, #ff6fb0, #ffb347); }
+.t-memes { background: linear-gradient(120deg, #7ff5e4, #ffb347 140%); }
+.t-main { padding: 22px 20px 22px 24px; display: flex; flex-direction: column; gap: 6px; }
+.t-no { font-size: 12px; font-weight: 700; letter-spacing: .18em; opacity: .75; }
+.t-h { font: italic 900 clamp(36px, 8vw, 52px)/1 var(--serif); letter-spacing: -.02em; }
+.t-main p { font-size: 15px; max-width: 34ch; font-weight: 500; }
+.t-stub { border-left: 2px dashed rgba(26, 6, 18, .5); padding: 16px 12px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; gap: 8px; }
+.big-ic { width: 38px; height: 38px; }
+.t-meta { font-size: 12px; font-weight: 700; line-height: 1.25; }
+.t-go { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: 14px; background: #1a0612; color: #fff; padding: 8px 12px; border-radius: 999px; min-height: 36px; }
+.t-go .ic { width: 16px; height: 16px; }
+.stats-inline { margin-top: 24px; display: grid; gap: 0; }
+@media (min-width: 701px) {
+  .hero-in { padding: 250px 40px 36px; }
+  .tickets { grid-template-columns: 1fr 1fr; }
+  .ticket { grid-template-columns: 1fr 120px; }
+  .stats-inline { grid-template-columns: 1fr 1fr; gap: 0 14px; align-items: start; }
+}
+
